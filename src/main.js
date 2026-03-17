@@ -28,19 +28,17 @@ form.addEventListener("submit", event => {
   showLoader();
 
   getImagesByQuery(searchQuery)
-    .then(response => {
-      const images = response.data.hits;
+  .then(data => {
+    if (data.hits.length === 0) {
+      iziToast.error({
+        message:
+          "Sorry, there are no images matching your search query. Please try again!",
+        position: "topRight",
+      });
+      return;
+    }
 
-      if (images.length === 0) {
-        iziToast.error({
-          message:
-            "Sorry, there are no images matching your search query. Please try again!",
-          position: "topRight",
-        });
-        return;
-      }
-
-      createGallery(images);
+      createGallery(data.hits);
     })
     .catch(error => {
       iziToast.error({
